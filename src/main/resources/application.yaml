@@ -1,0 +1,36 @@
+camel:
+  main:
+    name: CodeGenORMApp
+  springboot:
+    main-run-controller: true
+  thread-pool:
+    config:
+      pool-size: 3
+      max-pool-size: 5
+spring:
+  main:
+    web-application-type: none
+
+# Management
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,camelroutes
+  endpoint:
+    health:
+      enabled: true
+    camelroutes:
+      enabled: true
+      read-only: true
+
+logging:
+  level:
+    org.springframework: INFO
+    org.apache.camel.spring.boot: INFO
+    org.apache.camel.impl: INFO
+
+# Create samples com Custom Queries
+custom:
+    queries:
+      findBy: "jpa://com.codegen.camel.onorm.model.Product?resultClass=com.codegen.camel.onorm.model.Product"
