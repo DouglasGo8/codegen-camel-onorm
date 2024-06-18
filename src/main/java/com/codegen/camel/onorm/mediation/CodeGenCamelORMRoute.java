@@ -18,7 +18,7 @@ public class CodeGenCamelORMRoute extends RouteBuilder {
   public void configure() {
 
     from("timer://codeGenTimer?period=10s&fixedRate=true")
-            .log(LoggingLevel.INFO, ":: Apache Camel JPA/ORM ::")
+            /*.log(LoggingLevel.INFO, ":: Apache Camel JPA/ORM ::")
             // --------------------------- BEGIN QUERY findAll ---------------------------------------------------------
               .to("jpa://" + Product.class.getName() + "?resultClass=" + Product.class.getName() + "&namedQuery=findAll")
               .split(body()).streaming()
@@ -77,10 +77,11 @@ public class CodeGenCamelORMRoute extends RouteBuilder {
                 .log("HOORAY!!! ${body.productName}: ${body.price}")
               .end() // end split
               // --------------------------- END QUERY nativeQuery -----------------------------------------------------------
-
+*/
             .setVariable("color", constant("White"))
             .setVariable("pname", constant("Legion Go 512GB e 16GB"))
-            // EIP Capability, can execute two queries in parallel with an aggregated result
+            // With EIP Capability can execute two queries in parallel with an aggregated result
+            // from different queries perspective
             .multicast().aggregationStrategy(AggregationStrategies.flexible(Product[].class).accumulateInCollection(ArrayList.class))
               .parallelProcessing()
               .toD("{{custom.queries.findBy}}&query=SELECT p FROM Product p WHERE p.productName='${variable.pname}'")
